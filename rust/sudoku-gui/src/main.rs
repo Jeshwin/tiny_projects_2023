@@ -1,73 +1,43 @@
-use glutin_window::GlutinWindow as Window;
+#![deny(missing_docs)]
+
+//! A Sudoku game
+
+use glutin_window::GlutinWindow;
 use opengl_graphics::{GlGraphics, OpenGL};
 use piston::event_loop::{EventSettings, Events};
-use piston::input::{RenderArgs, RenderEvent, UpdateArgs, UpdateEvent};
-use piston::window::WindowSettings;
+use piston::{EventLoop, RenderEvent, WindowSettings};
 
-pub struct App {
-    gl: GlGraphics,
-    rotation: f64,
-}
-
-impl App {
-    fn render(&mut self, args: &RenderArgs) {
-        use graphics::*;
-
-        const FG: [f32; 4] = [0.8, 0.6, 0.5, 1.0];
-        const BG: [f32; 4] = [0.1, 0.2, 0.2, 1.0];
-
-        let square = rectangle::square(0.0, 0.0, 50.0);
-        let rotation = self.rotation;
-        let (x, y) = (args.window_size[0] / 2.0, args.window_size[1] / 2.0);
-
-        self.gl.draw(args.viewport(), |c, gl| {
-            // Clear the screen.
-            clear(BG, gl);
-
-            let transform = c
-                .transform
-                .trans(x, y)
-                .rot_rad(rotation)
-                .trans(-25.0, -25.0);
-
-            // Draw a box rotating around the middle of the screen.
-            rectangle(FG, square, transform, gl);
-        });
-    }
-
-    fn update(&mut self, args: &UpdateArgs) {
-        // Rotate 2 radians per second.
-        self.rotation += 2.0 * args.dt;
-    } 
-}
+pub use crate::gameboard::Gameboard;
+pub use crate::gameboard_controller::GameboardController;
+pub use crate::gameboard_view::{GameboardView, GameboardViewSettings};
+mod gameboard;
+mod gameboard_controller;
+mod gameboard_view;
 
 fn main() {
-    // Change this to OpenGL::V2_1 if not working.
     let opengl = OpenGL::V3_2;
-
-    // Create a Glutin window.
-    let mut window: Window = WindowSettings::new("Sudoku", [300, 400])
-        .graphics_api(opengl)
+    let settings = WindowSettings::new("Sudoku", (420, 420))
         .exit_on_esc(true)
-        .build()
-        .unwrap();
+        .graphics_api(opengl)
+        .vsync(true);
+    let mut window: GlutinWindow =
+        settings.build().expect("Could not create window");
+    let mut events = Events::new(EventSettings::new().lazy(true));
+    let mut gl = GlGraphics::new(opengl);
 
-    // Create a new game and run it.
-    let mut app = App {
-        gl: GlGraphics::new(opengl),
-        rotation: 0.0,
-    };
+   let gameboard = Gameboard::new();
+   let mut gameboard_controller = GameboardController::new(gameboard);
+   let gameboard_view_settings = GameboardViewSettings::new();
+   let gameboard_view = GameboardView::new(gameboard_view_settings);
 
-    let mut events = Events::new(EventSettings::new());
-    while let Some(e) = events.next(&mut window) {
+   while let Some(e) = events.next(&mut window) {
+        gameboard_controller.event(&e);
         if let Some(args) = e.render_args() {
-            app.render(&args);
+            gl.draw(args.viewport(), |c, g| {
+                use graphics::{clear};
+
+                clear([1.0; 4], g);
+                gameboard_view.draw(&gameboard_controller, &c, g);
+            });
         }
-
-        if let Some(args) = e.update_args() {
-            app.update(&args);
-        }
-    }
-}
-
-
+  }}
