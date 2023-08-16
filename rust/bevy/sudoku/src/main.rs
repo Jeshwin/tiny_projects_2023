@@ -1,5 +1,5 @@
-use bevy::prelude::*;
+use sudoku::start;
 
 fn main() {
-    App::new().run();
+    start();
 }
