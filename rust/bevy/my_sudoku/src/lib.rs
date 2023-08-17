@@ -1,5 +1,6 @@
 use bevy::{prelude::*, time::Stopwatch};
 use catppuccin::Flavour;
+use sudoku::Sudoku;
 use wasm_bindgen::prelude::*;
 
 #[cfg(target_arch = "wasm32")]
@@ -23,16 +24,38 @@ struct SudokuTimerComponent {
 struct Cell {
     coordinates: (i32, i32),
     value: u8,
-    interaction: Interaction,
 }
 
-impl Default for Cell {
+#[derive(Resource)]
+struct SudokuBoard {
+    values: Vec<Vec<u8>>,
+}
+
+impl Default for SudokuBoard {
     fn default() -> Self {
-        Cell {
-            coordinates: (0, 0),
-            value: 0,
-            interaction: Interaction::None,
+        let generated_board = Sudoku::generate_unique().to_bytes();
+        let mut values = vec![];
+
+        for r in 0..9 {
+            let mut values_row = vec![];
+            for c in 0..9 {
+                values_row.push(generated_board[r * 9 + c]);
+            }
+            values.push(values_row);
         }
+
+        SudokuBoard { values }
+    }
+}
+
+#[derive(Resource)]
+struct SelectedCell {
+    coordinates: Option<(i32, i32)>,
+}
+
+impl Default for SelectedCell {
+    fn default() -> Self {
+        SelectedCell { coordinates: None }
     }
 }
 
@@ -63,16 +86,25 @@ pub fn start() {
             }),
             ..default()
         }))
-        .add_systems(Startup, setup)
+        .init_resource::<SudokuBoard>()
+        .init_resource::<SelectedCell>()
+        .add_systems(Startup, setup_board)
+        .add_systems(Startup, setup_ui)
         .add_systems(Update, update_timer_text)
         .add_systems(Update, tick_timer)
         .add_systems(Update, update_button_colors)
         .add_systems(Update, button_update_timer)
+        .add_systems(Update, handle_mouse_clicks)
+        .add_systems(Update, highlight_cells)
         .run();
 }
 
-/// create the Sudoku board and the interface
-fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
+/// draw the Sudoku board
+fn setup_board(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    sudoku_board: Res<SudokuBoard>,
+) {
     // spawn camera
     commands.spawn(Camera2dBundle::default());
 
@@ -84,19 +116,26 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
                 + CELL_SIZE / 2.0
                 + ((CELL_SIZE + CELL_GAP) * x as f32)
                 + (x / 3) as f32 * BOX_GAP;
-            let py = (WINDOW_HEIGHT / -2.0)
+            let py = ((WINDOW_HEIGHT / -2.0)
                 + BOARD_PADDING
                 + CELL_SIZE / 2.0
                 + ((CELL_SIZE + CELL_GAP) * y as f32)
-                + (y / 3) as f32 * BOX_GAP;
+                + (y / 3) as f32 * BOX_GAP)
+                * -1.0;
             let translation_vec = Vec3::new(px, py, 0.);
-            let cell_vec = Vec2::new(CELL_SIZE, CELL_SIZE);
+            let cell_size_vec = Vec2::new(CELL_SIZE, CELL_SIZE);
+            let cell_value = sudoku_board.values[y as usize][x as usize];
+            let cell_value_string = if cell_value != 0 {
+                format!("{}", cell_value)
+            } else {
+                " ".to_string()
+            };
             commands
                 .spawn((
                     SpriteBundle {
                         sprite: Sprite {
                             color: Color::hex(THEME.surface0().hex()).unwrap(),
-                            custom_size: Some(cell_vec),
+                            custom_size: Some(cell_size_vec),
                             ..default()
                         },
                         transform: Transform::from_translation(translation_vec),
@@ -104,15 +143,14 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
                     },
                     Cell {
                         coordinates: (x, y),
-                        value: 0,
-                        ..default()
+                        value: cell_value,
                     },
                 ))
                 .with_children(|builder| {
                     builder.spawn(Text2dBundle {
                         text: Text {
                             sections: vec![TextSection::new(
-                                " ",
+                                cell_value_string,
                                 TextStyle {
                                     font: asset_server.load("fonts/FiraSans-Bold.ttf"),
                                     font_size: 48.0,
@@ -129,7 +167,10 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
                 });
         }
     }
+}
 
+// draw the ui
+fn setup_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
     // ui buttons and timer
     commands
         .spawn(NodeBundle {
@@ -298,5 +339,74 @@ fn button_update_timer(
     if new_board_interaction == Interaction::Pressed {
         sudoku_timer.time.unpause();
         sudoku_timer.time.reset();
+    }
+}
+
+fn handle_mouse_clicks(
+    mouse_input: Res<Input<MouseButton>>,
+    window: Query<&Window>,
+    mut selected_cell: ResMut<SelectedCell>,
+) {
+    let win = window.get_single().unwrap();
+    if mouse_input.just_pressed(MouseButton::Left) {
+        let cursor_x =
+            win.cursor_position().unwrap_or(Vec2::new(-1.0, -1.0)).x - (WINDOW_WIDTH / 2.0);
+        let cursor_y =
+            win.cursor_position().unwrap_or(Vec2::new(-1.0, -1.0)).y - (WINDOW_HEIGHT / 2.0);
+        println!("click at ({cursor_x:.0}, {cursor_y:.0})");
+
+        let prev_selected_cell = selected_cell.coordinates.unwrap_or((-1, -1));
+
+        // Check if click intersects a cell
+        for y in 0..9 {
+            for x in 0..9 {
+                let px = (WINDOW_WIDTH / -2.0)
+                    + BOARD_PADDING
+                    + CELL_SIZE / 2.0
+                    + ((CELL_SIZE + CELL_GAP) * x as f32)
+                    + (x / 3) as f32 * BOX_GAP;
+                let py = (WINDOW_HEIGHT / -2.0)
+                    + BOARD_PADDING
+                    + CELL_SIZE / 2.0
+                    + ((CELL_SIZE + CELL_GAP) * y as f32)
+                    + (y / 3) as f32 * BOX_GAP;
+                if (cursor_x - px).abs() < CELL_SIZE / 2.0
+                    && (cursor_y - py).abs() < CELL_SIZE / 2.0
+                {
+                    selected_cell.coordinates = Some((x, y));
+                    break;
+                }
+            }
+        }
+
+        // If it didn't intersect a cell, set selected_cell to None
+        if selected_cell.coordinates.unwrap_or((-1, -1)) == prev_selected_cell {
+            selected_cell.coordinates = None;
+        }
+    }
+}
+
+fn highlight_cells(selected_cell: Res<SelectedCell>, mut cells_query: Query<(&mut Sprite, &Cell)>) {
+    if let Some(selected_cell_coordinates) = selected_cell.coordinates {
+        for (mut cell_sprite, cell) in cells_query.iter_mut() {
+            if cell.coordinates == selected_cell_coordinates {
+                cell_sprite.color = Color::hex(THEME.surface2().hex()).unwrap().into();
+            } else if cell.coordinates.0 == selected_cell_coordinates.0
+                || cell.coordinates.1 == selected_cell_coordinates.1
+                || (cell.coordinates.0 / 3, cell.coordinates.1 / 3)
+                    == (
+                        selected_cell_coordinates.0 / 3,
+                        selected_cell_coordinates.1 / 3,
+                    )
+            {
+                cell_sprite.color = Color::hex(THEME.surface1().hex()).unwrap().into();
+            } else {
+                cell_sprite.color = Color::hex(THEME.surface0().hex()).unwrap().into();
+            }
+        }
+    } else {
+        for (mut cell_sprite, _cell) in cells_query.iter_mut() {
+            cell_sprite.color = Color::hex(THEME.surface0().hex()).unwrap().into();
+        }
     }
 }
