@@ -212,7 +212,6 @@ pub fn handle_mouse_clicks_on_board(
         if selected_cell.coordinates.unwrap_or((-1, -1)) == prev_selected_cell {
             selected_cell.coordinates = None;
         }
-        println!("Selected cell: {:?}", selected_cell.coordinates);
     }
 }
 
@@ -255,34 +254,24 @@ pub fn cell_input_system(
                 != sudoku_board.generated_values[cell_y as usize][cell_x as usize]
         {
             if kbd.just_pressed(KeyCode::Key1) || kbd.just_pressed(KeyCode::Numpad1) {
-                println!("Input was 1");
                 sudoku_board.current_values[cell_y as usize][cell_x as usize] = 1;
             } else if kbd.just_pressed(KeyCode::Key2) || kbd.just_pressed(KeyCode::Numpad2) {
-                println!("Input was 2");
                 sudoku_board.current_values[cell_y as usize][cell_x as usize] = 2;
             } else if kbd.just_pressed(KeyCode::Key3) || kbd.just_pressed(KeyCode::Numpad3) {
-                println!("Input was 3");
                 sudoku_board.current_values[cell_y as usize][cell_x as usize] = 3;
             } else if kbd.just_pressed(KeyCode::Key4) || kbd.just_pressed(KeyCode::Numpad4) {
-                println!("Input was 4");
                 sudoku_board.current_values[cell_y as usize][cell_x as usize] = 4;
             } else if kbd.just_pressed(KeyCode::Key5) || kbd.just_pressed(KeyCode::Numpad5) {
-                println!("Input was 5");
                 sudoku_board.current_values[cell_y as usize][cell_x as usize] = 5;
             } else if kbd.just_pressed(KeyCode::Key6) || kbd.just_pressed(KeyCode::Numpad6) {
-                println!("Input was 6");
                 sudoku_board.current_values[cell_y as usize][cell_x as usize] = 6;
             } else if kbd.just_pressed(KeyCode::Key7) || kbd.just_pressed(KeyCode::Numpad7) {
-                println!("Input was 7");
                 sudoku_board.current_values[cell_y as usize][cell_x as usize] = 7;
             } else if kbd.just_pressed(KeyCode::Key8) || kbd.just_pressed(KeyCode::Numpad8) {
-                println!("Input was 8");
                 sudoku_board.current_values[cell_y as usize][cell_x as usize] = 8;
             } else if kbd.just_pressed(KeyCode::Key9) || kbd.just_pressed(KeyCode::Numpad9) {
-                println!("Input was 9");
                 sudoku_board.current_values[cell_y as usize][cell_x as usize] = 9;
             } else if kbd.just_pressed(KeyCode::Key0) || kbd.just_pressed(KeyCode::Numpad0) {
-                println!("Input was 0");
                 sudoku_board.current_values[cell_y as usize][cell_x as usize] = 0;
             }
         }

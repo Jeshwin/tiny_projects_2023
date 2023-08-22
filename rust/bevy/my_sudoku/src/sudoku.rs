@@ -1,5 +1,13 @@
 use rand::random;
 
+// File: sudoku.rs
+// Original code from: https://github.com/aconyteds/wasm-sudoku-rust
+
+// Adapted from src/sudoku.rs in the wasm-sudoku-rust repository by aconyteds.
+// Repository: https://github.com/aconyteds/wasm-sudoku-rust
+
+// Your modifications and additional code go here.
+
 #[derive(Copy, Clone, PartialEq)]
 pub enum Difficulty {
     Easy,

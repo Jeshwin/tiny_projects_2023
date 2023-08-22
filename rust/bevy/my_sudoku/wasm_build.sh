@@ -1,3 +1,3 @@
 #!/bin/bash
 
-wasm-pack build --target $1 --out-name demo
+wasm-pack build --target web --out-name demo

@@ -172,32 +172,49 @@ pub fn update_button_colors(
 
 pub fn button_system(
     mut timer_query: Query<&mut SudokuTimerComponent>,
-    show_solution_button_query: Query<&Interaction, With<ShowSolution>>,
-    reset_board_button_query: Query<&Interaction, With<ResetBoard>>,
-    new_board_button_query: Query<&Interaction, With<NewBoard>>,
+    show_solution_button_query: Query<&Interaction, (Changed<Interaction>, With<ShowSolution>)>,
+    reset_board_button_query: Query<&Interaction, (Changed<Interaction>, With<ResetBoard>)>,
+    new_board_button_query: Query<&Interaction, (Changed<Interaction>, With<NewBoard>)>,
     mut sudoku_board: ResMut<board::SudokuBoard>,
 ) {
     let mut sudoku_timer = timer_query.single_mut();
 
-    let &show_solution_interaction = show_solution_button_query.single();
-    if show_solution_interaction == Interaction::Pressed {
-        sudoku_board.current_values = sudoku_board.solution.clone();
-        sudoku_timer.time.pause();
-    }
-    let &reset_board_interaction = reset_board_button_query.single();
-    if reset_board_interaction == Interaction::Pressed {
-        sudoku_board.current_values = sudoku_board.generated_values.clone();
-        sudoku_timer.time.unpause();
-        sudoku_timer.time.reset();
-    }
-    let &new_board_interaction = new_board_button_query.single();
-    if new_board_interaction == Interaction::Pressed {
-        if sudoku_board.difficulty == sudoku::Difficulty::Easy {
-            *sudoku_board = board::SudokuBoard::with_difficulty(sudoku::Difficulty::Medium);
-        } else {
-            *sudoku_board = board::SudokuBoard::with_difficulty(sudoku::Difficulty::Hard);
+    if let Ok(&show_solution_interaction) = show_solution_button_query.get_single() {
+        if show_solution_interaction == Interaction::Pressed {
+            sudoku_board.current_values = sudoku_board.solution.clone();
+            sudoku_timer.time.pause();
         }
-        sudoku_timer.time.unpause();
-        sudoku_timer.time.reset();
+    }
+    if let Ok(&reset_board_interaction) = reset_board_button_query.get_single() {
+        if reset_board_interaction == Interaction::Pressed {
+            sudoku_board.current_values = sudoku_board.generated_values.clone();
+            sudoku_timer.time.unpause();
+            sudoku_timer.time.reset();
+        }
+    }
+    if let Ok(&new_board_interaction) = new_board_button_query.get_single() {
+        if new_board_interaction == Interaction::Pressed {
+            if sudoku_board.difficulty == sudoku::Difficulty::Easy {
+                *sudoku_board = board::SudokuBoard::with_difficulty(sudoku::Difficulty::Medium);
+            } else {
+                *sudoku_board = board::SudokuBoard::with_difficulty(sudoku::Difficulty::Hard);
+            }
+            sudoku_timer.time.unpause();
+            sudoku_timer.time.reset();
+        }
+    }
+}
+
+pub fn complete_timer(
+    mut timer_query: Query<(&mut Text, &mut SudokuTimerComponent)>,
+    sudoku_board: ResMut<board::SudokuBoard>,
+) {
+    let (mut timer_text, mut sudoku_timer) = timer_query.single_mut();
+
+    if sudoku_board.current_values == sudoku_board.solution {
+        sudoku_timer.time.pause();
+        timer_text.sections[0].style.color = Color::hex(THEME.green().hex()).unwrap().into();
+    } else {
+        timer_text.sections[0].style.color = Color::hex(THEME.subtext0().hex()).unwrap().into();
     }
 }
