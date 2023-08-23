@@ -38,8 +38,9 @@ dependencies:
     # This adds the ability to use Google Fonts in TextStyle widgets
     google_fonts: ^5.1.0
 
-    # This adds style to a settings page based on the device
-    settings_ui: ^2.0.2
+    # This add the ability to save preferences from a settings page.
+    # Use in the SettingsPage widget to store various settings
+    shared_preferences: ^2.2.0
 
 dev_dependencies:
     flutter_test:

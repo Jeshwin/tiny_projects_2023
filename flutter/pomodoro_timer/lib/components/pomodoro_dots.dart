@@ -56,6 +56,5 @@ class PomodoroDots extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: childrenDots,
     );
-    ;
   }
 }

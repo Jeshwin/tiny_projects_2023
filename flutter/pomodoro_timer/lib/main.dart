@@ -48,20 +48,37 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Container(
               margin: const EdgeInsets.symmetric(
-                vertical: 50,
-                horizontal: 30,
+                vertical: 40,
               ),
-              alignment: Alignment.centerRight,
-              child: NeumorphicButton(
-                size: 40,
-                icon: Icons.settings,
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const SettingsPage(),
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  const SizedBox(
+                    width: 40,
+                    height: 40,
+                  ),
+                  Text(
+                    "Pomodoro",
+                    style: GoogleFonts.rubik(
+                      textStyle: TextStyle(
+                        fontSize: 25,
+                        color: Catppuccin().text,
+                      ),
                     ),
-                  );
-                },
+                  ),
+                  NeumorphicButton(
+                    size: 40,
+                    icon: Icons.settings,
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const SettingsPage(),
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
             Container(
@@ -69,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 top: 150,
               ),
               child: Text(
-                '24:59',
+                "25:00",
                 style: GoogleFonts.rubik(
                   textStyle: TextStyle(
                     fontSize: 100,
