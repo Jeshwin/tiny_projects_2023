@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import '../styles/catppuccin.dart';
 
 class PomodoroDots extends StatelessWidget {
   const PomodoroDots({
     super.key,
     required this.numCycles,
-    this.currentDot = 0,
+    required this.currentDot,
+    required this.isRunning,
   });
 
   final int numCycles;
   final int currentDot;
+  final bool isRunning;
 
   @override
   Widget build(BuildContext context) {
@@ -18,25 +19,21 @@ class PomodoroDots extends StatelessWidget {
     IconData iconToAdd = Icons.circle_outlined;
 
     // Add work and short break
-    for (var i = 0; i < numCycles; i++) {
+    for (var i = 0; i <= numCycles * 2; i++) {
       if (completed > 0) {
         iconToAdd = Icons.circle;
+      } else if (completed == 0) {
+        if (isRunning) {
+          iconToAdd = Icons.square;
+        } else {
+          iconToAdd = Icons.circle_outlined;
+        }
       } else {
         iconToAdd = Icons.circle_outlined;
       }
       childrenDots.add(Icon(
         iconToAdd,
-        color: Catppuccin().green,
-      ));
-      completed--;
-      if (completed > 0) {
-        iconToAdd = Icons.circle;
-      } else {
-        iconToAdd = Icons.circle_outlined;
-      }
-      childrenDots.add(Icon(
-        iconToAdd,
-        color: Catppuccin().teal,
+        color: Theme.of(context).primaryColor,
       ));
       completed--;
     }
@@ -44,12 +41,18 @@ class PomodoroDots extends StatelessWidget {
     // Add long break
     if (completed > 0) {
       iconToAdd = Icons.circle;
+    } else if (completed == 0) {
+      if (isRunning) {
+        iconToAdd = Icons.square;
+      } else {
+        iconToAdd = Icons.circle_outlined;
+      }
     } else {
       iconToAdd = Icons.circle_outlined;
     }
     childrenDots.add(Icon(
       iconToAdd,
-      color: Catppuccin().mauve,
+      color: Theme.of(context).primaryColor,
     ));
 
     return Row(
