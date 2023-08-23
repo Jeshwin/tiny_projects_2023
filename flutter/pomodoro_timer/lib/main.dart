@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:pomodoro_timer/components/neumorphic_clock.dart';
 import 'package:pomodoro_timer/components/pomodoro_dots.dart';
 import 'components/neumorphic_button.dart';
 import 'utils/constants.dart';
@@ -48,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _isRunning = false;
 
   Timer? _timer;
-  int _numSeconds = WORK_TIME;
+  int _numMillis = WORK_TIME;
 
   // Start the timer given the current cycle
   void _startTimer() {
@@ -56,21 +57,21 @@ class _MyHomePageState extends State<MyHomePage> {
       _isRunning = true;
     });
 
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(milliseconds: 1), (timer) {
       setState(() {
-        if (_numSeconds > 0) {
-          _numSeconds--;
+        if (_numMillis > 0) {
+          _numMillis--;
         } else {
           _isRunning = false;
           _currentDot = (_currentDot + 1) % (_numCycles * 2 + 2);
           _timer?.cancel();
 
           if (_currentDot == _numCycles * 2 + 1) {
-            _numSeconds = LONG_BREAK_TIME;
+            _numMillis = LONG_BREAK_TIME;
           } else if (_currentDot % 2 == 0) {
-            _numSeconds = WORK_TIME;
+            _numMillis = WORK_TIME;
           } else {
-            _numSeconds = SHORT_BREAK_TIME;
+            _numMillis = SHORT_BREAK_TIME;
           }
         }
       });
@@ -88,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
   // Cancel the timer
   void _cancelTimer() {
     setState(() {
-      _numSeconds = WORK_TIME;
+      _numMillis = WORK_TIME;
       _currentDot = 0;
       _isRunning = false;
     });
@@ -97,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // Convert seconds into a printable string
   String _secondsToString() {
-    return '${(_numSeconds / 60).floor().toString().padLeft(2, '0')}:${(_numSeconds % 60).toString().padLeft(2, '0')}';
+    return '${(_numMillis / 60000).floor().toString().padLeft(2, '0')}:${((_numMillis / 1000) % 60).floor().toString().padLeft(2, '0')}';
   }
 
   // Change background color based on session and current brightness
@@ -173,9 +174,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
+            NeumorphicClock(
+              numCycles: _numCycles,
+              currentDot: _currentDot,
+              numMillis: _numMillis,
+              color: _backgroundColor(),
+            ),
             Container(
               margin: const EdgeInsets.only(
-                top: 150,
+                top: 25,
               ),
               child: Text(
                 _secondsToString(),
@@ -192,7 +199,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Container(
               margin: const EdgeInsets.symmetric(
-                vertical: 120,
+                vertical: 100,
               ),
               child: NeumorphicButton(
                 size: 80,

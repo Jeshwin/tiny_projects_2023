@@ -35,6 +35,10 @@ dependencies:
     # Use with the CupertinoIcons class for iOS style icons.
     cupertino_icons: ^1.0.2
 
+    # This extends the BoxDecoration and BoxShadow widgets to add inner shadows
+    # Useful for neumorphic widgets such as buttons
+    flutter_inset_box_shadow: ^1.0.8
+
     # This adds the ability to save preferences from a settings page.
     # Use in the SettingsPage widget to store various settings
     shared_preferences: ^2.2.0

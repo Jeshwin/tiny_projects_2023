@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 class NeumorphicButton extends StatelessWidget {
-  const NeumorphicButton(
-      {super.key,
-      required this.size,
-      required this.icon,
-      required this.onPressed,
-      required this.color});
+  const NeumorphicButton({
+    super.key,
+    required this.size,
+    required this.icon,
+    required this.onPressed,
+    required this.color,
+  });
 
   final double size;
   final IconData icon;
