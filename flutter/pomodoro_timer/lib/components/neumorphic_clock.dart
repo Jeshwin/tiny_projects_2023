@@ -1,63 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:pomodoro_timer/components/clock_painter.dart';
-import 'package:pomodoro_timer/utils/defaults.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class NeumorphicClock extends StatefulWidget {
   const NeumorphicClock({
     super.key,
+    required this.numCycles,
     required this.currentDot,
     required this.numMillis,
+    required this.workTime,
+    required this.shortBreakTime,
+    required this.longBreakTime,
     required this.color,
   });
 
+  final int numCycles;
   final int currentDot;
   final int numMillis;
+  final int workTime;
+  final int shortBreakTime;
+  final int longBreakTime;
   final Color color;
 
+  @override
   State<NeumorphicClock> createState() => _NeumorphicClockState();
 }
 
 class _NeumorphicClockState extends State<NeumorphicClock> {
-  int _workTime = defaultWorkTime;
-  int _shortBreakTime = defaultShortBreakTime;
-  int _longBreakTime = defaultLongBreakTime;
-
-  int _numCycles = 2;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadTimers();
-  }
-
-  Future<void> _loadTimers() async {
-    // obtain shared preferences
-    final prefs = await SharedPreferences.getInstance();
-
-    setState(() {
-      _numCycles = prefs.getInt('numCycles') ?? 2;
-
-      _workTime = prefs.getInt('workTime') ?? defaultWorkTime;
-      _shortBreakTime = prefs.getInt('shortBreakTime') ?? defaultShortBreakTime;
-      _longBreakTime = prefs.getInt('longBreakTIme') ?? defaultLongBreakTime;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     int baseTime = 0;
 
-    if (widget.currentDot == _numCycles * 2 + 1) {
-      baseTime = _longBreakTime;
+    if (widget.currentDot == widget.numCycles * 2 + 1) {
+      baseTime = widget.longBreakTime;
     } else if (widget.currentDot % 2 == 0) {
-      baseTime = _workTime;
+      baseTime = widget.workTime;
     } else {
-      baseTime = _shortBreakTime;
+      baseTime = widget.shortBreakTime;
     }
 
     return AnimatedContainer(
-      duration: const Duration(seconds: 1),
+      duration: const Duration(milliseconds: 700),
       height: 250,
       width: 250,
       padding: const EdgeInsets.all(25),

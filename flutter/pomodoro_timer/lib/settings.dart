@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:pomodoro_timer/components/neumorphic_button.dart';
+import 'package:pomodoro_timer/utils/defaults.dart';
 import 'package:pomodoro_timer/utils/settings_enums.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,10 +15,95 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   bool _automaticCyclesToggle = false;
 
-  Future<void> setNumCycles(int numCycles) async {
+  numCyclesOptions _initNumCycles = numCyclesOptions.two;
+  workTimerOptions _initWorkTime = workTimerOptions.twentyfive;
+  shortBreakTimerOptions _initShortBreakTime = shortBreakTimerOptions.five;
+  longBreakTimerOptions _initLongBreakTime = longBreakTimerOptions.fifteen;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadInitSettings();
+  }
+
+  Future<void> _loadInitSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      _initNumCycles = switch (prefs.getInt('numCycles')) {
+        1 => numCyclesOptions.one,
+        2 => numCyclesOptions.two,
+        3 => numCyclesOptions.three,
+        4 => numCyclesOptions.four,
+        5 => numCyclesOptions.five,
+        6 => numCyclesOptions.six,
+        _ => numCyclesOptions.two,
+      };
+    });
+
+    setState(() {
+      _automaticCyclesToggle = prefs.getBool('automaticCycles') ?? false;
+    });
+
+    setState(() {
+      _initWorkTime = switch (prefs.getInt('workTime')) {
+        900000 => workTimerOptions.fifteen,
+        1200000 => workTimerOptions.twenty,
+        1500000 => workTimerOptions.twentyfive,
+        1800000 => workTimerOptions.thirty,
+        2700000 => workTimerOptions.fourtyfive,
+        3000000 => workTimerOptions.fifty,
+        3600000 => workTimerOptions.sixty,
+        _ => workTimerOptions.twentyfive,
+      };
+    });
+
+    setState(() {
+      _initShortBreakTime = switch (prefs.getInt('shortBreakTime')) {
+        300000 => shortBreakTimerOptions.five,
+        600000 => shortBreakTimerOptions.ten,
+        _ => shortBreakTimerOptions.five,
+      };
+    });
+
+    setState(() {
+      _initLongBreakTime = switch (prefs.getInt('longBreakTime')) {
+        900000 => longBreakTimerOptions.fifteen,
+        1200000 => longBreakTimerOptions.twenty,
+        1800000 => longBreakTimerOptions.thirty,
+        _ => longBreakTimerOptions.fifteen,
+      };
+    });
+  }
+
+  Future<void> _setAutomaticCycles(bool automaticCycles) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    await prefs.setBool('automaticCycles', automaticCycles);
+  }
+
+  Future<void> _setNumCycles(int numCycles) async {
     final prefs = await SharedPreferences.getInstance();
 
     await prefs.setInt('numCycles', numCycles);
+  }
+
+  Future<void> _setWorkTime(int workTime) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    await prefs.setInt('workTime', workTime);
+  }
+
+  Future<void> _setShortBreakTime(int shortBreakTime) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    await prefs.setInt('shortBreakTime', shortBreakTime);
+  }
+
+  Future<void> _setLongBreakTime(int longBreakTIme) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    await prefs.setInt('longBreakTIme', longBreakTIme);
   }
 
   @override
@@ -135,9 +221,9 @@ class _SettingsState extends State<Settings> {
                                   fontSize: 18,
                                 ),
                                 onSelected: (numCyclesOptions? option) {
-                                  setNumCycles(option?.numCycles ?? 2);
+                                  _setNumCycles(option?.numCycles ?? 2);
                                 },
-                                initialSelection: numCyclesOptions.two,
+                                initialSelection: _initNumCycles,
                                 dropdownMenuEntries: [
                                   DropdownMenuEntry<numCyclesOptions>(
                                     label: numCyclesOptions.one.label,
@@ -182,6 +268,7 @@ class _SettingsState extends State<Settings> {
                               onChanged: (bool value) {
                                 setState(() {
                                   _automaticCyclesToggle = value;
+                                  _setAutomaticCycles(value);
                                 });
                               },
                             ),
@@ -267,7 +354,11 @@ class _SettingsState extends State<Settings> {
                                 textStyle: const TextStyle(
                                   fontSize: 18,
                                 ),
-                                initialSelection: workTimerOptions.twentyfive,
+                                onSelected: (workTimerOptions? option) {
+                                  _setWorkTime(
+                                      option?.workTime ?? defaultWorkTime);
+                                },
+                                initialSelection: _initWorkTime,
                                 dropdownMenuEntries: [
                                   DropdownMenuEntry<workTimerOptions>(
                                     label: workTimerOptions.fifteen.label,
@@ -329,7 +420,11 @@ class _SettingsState extends State<Settings> {
                                 textStyle: const TextStyle(
                                   fontSize: 18,
                                 ),
-                                initialSelection: shortBreakTimerOptions.five,
+                                onSelected: (shortBreakTimerOptions? option) {
+                                  _setShortBreakTime(option?.shortBreakTime ??
+                                      defaultShortBreakTime);
+                                },
+                                initialSelection: _initShortBreakTime,
                                 dropdownMenuEntries: [
                                   DropdownMenuEntry<shortBreakTimerOptions>(
                                     label: shortBreakTimerOptions.five.label,
@@ -365,7 +460,11 @@ class _SettingsState extends State<Settings> {
                               textStyle: const TextStyle(
                                 fontSize: 18,
                               ),
-                              initialSelection: longBreakTimerOptions.fifteen,
+                              onSelected: (longBreakTimerOptions? option) {
+                                _setLongBreakTime(option?.longBreakTime ??
+                                    defaultLongBreakTime);
+                              },
+                              initialSelection: _initLongBreakTime,
                               dropdownMenuEntries: [
                                 DropdownMenuEntry<longBreakTimerOptions>(
                                   label: longBreakTimerOptions.fifteen.label,

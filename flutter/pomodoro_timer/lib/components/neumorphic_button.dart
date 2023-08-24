@@ -19,7 +19,7 @@ class NeumorphicButton extends StatelessWidget {
     return AnimatedContainer(
       height: size,
       width: size,
-      duration: const Duration(seconds: 1),
+      duration: const Duration(milliseconds: 700),
       decoration: BoxDecoration(
         color: color,
         shape: BoxShape.circle,

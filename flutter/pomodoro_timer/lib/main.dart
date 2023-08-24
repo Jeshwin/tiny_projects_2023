@@ -174,7 +174,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       body: AnimatedContainer(
         color: _backgroundColor(),
-        duration: const Duration(seconds: 1),
+        duration: const Duration(milliseconds: 700),
         alignment: Alignment.center,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -218,8 +218,12 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             NeumorphicClock(
+              numCycles: _numCycles,
               currentDot: _currentDot,
               numMillis: _numMillis,
+              workTime: _workTime,
+              shortBreakTime: _shortBreakTime,
+              longBreakTime: _longBreakTime,
               color: _backgroundColor(),
             ),
             Container(
