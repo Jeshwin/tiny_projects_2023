@@ -1,15 +1,27 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:pomodoro_timer/components/neumorphic_clock.dart';
+import 'package:pomodoro_timer/components/clock/neumorphic_clock.dart';
 import 'package:pomodoro_timer/components/pomodoro_dots.dart';
+import 'package:pomodoro_timer/components/top_bar.dart';
 import 'package:pomodoro_timer/settings.dart';
+import 'package:pomodoro_timer/utils/settings_model.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'components/neumorphic_button.dart';
 import 'utils/defaults.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => SettingsModel(),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -179,52 +191,31 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Container(
-              margin: const EdgeInsets.only(
-                top: 75,
-                bottom: 50,
+            TopBar(
+              left: NeumorphicButton(
+                size: 40,
+                icon: Icons.rotate_left_rounded,
+                onPressed: () {
+                  _cancelTimer();
+                },
+                color: _backgroundColor(),
               ),
-              alignment: Alignment.center,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  NeumorphicButton(
-                    size: 40,
-                    icon: Icons.rotate_left_rounded,
-                    onPressed: () {
-                      _cancelTimer();
-                    },
-                    color: _backgroundColor(),
-                  ),
-                  Text(
-                    "Pomodoro",
-                    style: TextStyle(
-                      fontSize: 25,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                  NeumorphicButton(
-                    size: 40,
-                    icon: Icons.settings,
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const Settings()),
-                      ).then(onGoBack);
-                    },
-                    color: _backgroundColor(),
-                  ),
-                ],
+              title: "Pomodoro",
+              right: NeumorphicButton(
+                size: 40,
+                icon: Icons.settings,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Settings()),
+                  ).then(onGoBack);
+                },
+                color: _backgroundColor(),
               ),
             ),
             NeumorphicClock(
-              numCycles: _numCycles,
               currentDot: _currentDot,
               numMillis: _numMillis,
-              workTime: _workTime,
-              shortBreakTime: _shortBreakTime,
-              longBreakTime: _longBreakTime,
               color: _backgroundColor(),
             ),
             Container(

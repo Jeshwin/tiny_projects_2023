@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:pomodoro_timer/components/clock_painter.dart';
+import 'package:pomodoro_timer/components/clock/clock_painter.dart';
+import 'package:pomodoro_timer/utils/settings_model.dart';
+import 'package:provider/provider.dart';
 
 class NeumorphicClock extends StatefulWidget {
   const NeumorphicClock({
     super.key,
-    required this.numCycles,
     required this.currentDot,
     required this.numMillis,
-    required this.workTime,
-    required this.shortBreakTime,
-    required this.longBreakTime,
     required this.color,
   });
 
-  final int numCycles;
   final int currentDot;
   final int numMillis;
-  final int workTime;
-  final int shortBreakTime;
-  final int longBreakTime;
   final Color color;
 
   @override
@@ -28,25 +22,10 @@ class NeumorphicClock extends StatefulWidget {
 class _NeumorphicClockState extends State<NeumorphicClock> {
   @override
   Widget build(BuildContext context) {
-    int baseTime = 0;
-
-    if (widget.currentDot == widget.numCycles * 2 + 1) {
-      baseTime = widget.longBreakTime;
-    } else if (widget.currentDot % 2 == 0) {
-      baseTime = widget.workTime;
-    } else {
-      baseTime = widget.shortBreakTime;
-    }
-
-    double clockSize =
-        (MediaQuery.of(context).size.width < MediaQuery.of(context).size.height)
-            ? MediaQuery.of(context).size.width / 1.5
-            : MediaQuery.of(context).size.height / 3;
-
     return AnimatedContainer(
       duration: const Duration(milliseconds: 700),
-      height: clockSize,
-      width: clockSize,
+      height: 250,
+      width: 250,
       padding: const EdgeInsets.all(25),
       decoration: BoxDecoration(
         color: widget.color,
@@ -68,12 +47,26 @@ class _NeumorphicClockState extends State<NeumorphicClock> {
           ),
         ],
       ),
-      child: CustomPaint(
-        painter: ClockPainter(
-          brightness: Theme.of(context).brightness,
-          baseTime: baseTime,
-          numMillis: widget.numMillis,
-        ),
+      child: Consumer<SettingsModel>(
+        builder: (context, settings, child) {
+          int baseTime = 0;
+
+          if (widget.currentDot == settings.numCycles * 2 + 1) {
+            baseTime = settings.longBreakTime;
+          } else if (widget.currentDot % 2 == 0) {
+            baseTime = settings.workTime;
+          } else {
+            baseTime = settings.shortBreakTime;
+          }
+
+          return CustomPaint(
+            painter: ClockPainter(
+              brightness: Theme.of(context).brightness,
+              baseTime: baseTime,
+              numMillis: widget.numMillis,
+            ),
+          );
+        },
       ),
     );
   }
