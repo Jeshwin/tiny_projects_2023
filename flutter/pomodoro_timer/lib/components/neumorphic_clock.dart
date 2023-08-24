@@ -38,10 +38,15 @@ class _NeumorphicClockState extends State<NeumorphicClock> {
       baseTime = widget.shortBreakTime;
     }
 
+    double clockSize =
+        (MediaQuery.of(context).size.width < MediaQuery.of(context).size.height)
+            ? MediaQuery.of(context).size.width / 1.5
+            : MediaQuery.of(context).size.height / 3;
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 700),
-      height: 250,
-      width: 250,
+      height: clockSize,
+      width: clockSize,
       padding: const EdgeInsets.all(25),
       decoration: BoxDecoration(
         color: widget.color,

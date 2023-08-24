@@ -84,10 +84,10 @@ class _MyHomePageState extends State<MyHomePage> {
       _isRunning = true;
     });
 
-    _timer = Timer.periodic(const Duration(milliseconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(milliseconds: 5), (timer) {
       setState(() {
         if (_numMillis > 0) {
-          _numMillis--;
+          _numMillis -= 5;
         } else {
           _isRunning = false;
           _currentDot = (_currentDot + 1) % (_numCycles * 2 + 2);
@@ -177,11 +177,12 @@ class _MyHomePageState extends State<MyHomePage> {
         duration: const Duration(milliseconds: 700),
         alignment: Alignment.center,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Container(
               margin: const EdgeInsets.only(
                 top: 75,
+                bottom: 50,
               ),
               alignment: Alignment.center,
               child: Row(
@@ -245,7 +246,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Container(
               margin: const EdgeInsets.only(
-                bottom: 100,
+                top: 50,
               ),
               child: NeumorphicButton(
                 size: 80,
