@@ -16,9 +16,10 @@ class NeumorphicButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
       height: size,
       width: size,
+      duration: const Duration(seconds: 1),
       decoration: BoxDecoration(
         color: color,
         shape: BoxShape.circle,

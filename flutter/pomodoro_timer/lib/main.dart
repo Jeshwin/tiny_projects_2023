@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pomodoro_timer/components/neumorphic_clock.dart';
 import 'package:pomodoro_timer/components/pomodoro_dots.dart';
+import 'package:pomodoro_timer/settings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'components/neumorphic_button.dart';
-import 'utils/constants.dart';
+import 'utils/defaults.dart';
 
 void main() {
   runApp(const MyApp());
@@ -43,13 +45,38 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final int _numCycles = 3;
+  int _numCycles = 2;
   int _currentDot = 0;
 
-  bool _isRunning = false;
-
   Timer? _timer;
-  int _numMillis = WORK_TIME;
+  bool _isRunning = false;
+  bool _automaticCycles = false;
+
+  int _numMillis = defaultWorkTime;
+  int _workTime = defaultWorkTime;
+  int _shortBreakTime = defaultShortBreakTime;
+  int _longBreakTime = defaultLongBreakTime;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTimers();
+  }
+
+  Future<void> _loadTimers() async {
+    // obtain shared preferences
+    final prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      _automaticCycles = prefs.getBool('automaticCycles') ?? false;
+      _numCycles = prefs.getInt('numCycles') ?? 2;
+
+      _workTime = prefs.getInt('workTime') ?? defaultWorkTime;
+      _shortBreakTime = prefs.getInt('shortBreakTime') ?? defaultShortBreakTime;
+      _longBreakTime = prefs.getInt('longBreakTIme') ?? defaultLongBreakTime;
+      _numMillis = prefs.getInt('workTime') ?? defaultWorkTime;
+    });
+  }
 
   // Start the timer given the current cycle
   void _startTimer() {
@@ -67,11 +94,15 @@ class _MyHomePageState extends State<MyHomePage> {
           _timer?.cancel();
 
           if (_currentDot == _numCycles * 2 + 1) {
-            _numMillis = LONG_BREAK_TIME;
+            _numMillis = _longBreakTime;
           } else if (_currentDot % 2 == 0) {
-            _numMillis = WORK_TIME;
+            _numMillis = _workTime;
           } else {
-            _numMillis = SHORT_BREAK_TIME;
+            _numMillis = _shortBreakTime;
+          }
+
+          if (_automaticCycles) {
+            _startTimer();
           }
         }
       });
@@ -89,7 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
   // Cancel the timer
   void _cancelTimer() {
     setState(() {
-      _numMillis = WORK_TIME;
+      _numMillis = _workTime;
       _currentDot = 0;
       _isRunning = false;
     });
@@ -134,17 +165,23 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  FutureOr onGoBack(dynamic value) {
+    _loadTimers();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _backgroundColor(),
-      body: Center(
+      body: AnimatedContainer(
+        color: _backgroundColor(),
+        duration: const Duration(seconds: 1),
+        alignment: Alignment.center,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Container(
-              margin: const EdgeInsets.symmetric(
-                vertical: 75,
+              margin: const EdgeInsets.only(
+                top: 75,
               ),
               alignment: Alignment.center,
               child: Row(
@@ -168,14 +205,19 @@ class _MyHomePageState extends State<MyHomePage> {
                   NeumorphicButton(
                     size: 40,
                     icon: Icons.settings,
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Settings()),
+                      ).then(onGoBack);
+                    },
                     color: _backgroundColor(),
                   ),
                 ],
               ),
             ),
             NeumorphicClock(
-              numCycles: _numCycles,
               currentDot: _currentDot,
               numMillis: _numMillis,
               color: _backgroundColor(),
@@ -198,8 +240,8 @@ class _MyHomePageState extends State<MyHomePage> {
               isRunning: _isRunning,
             ),
             Container(
-              margin: const EdgeInsets.symmetric(
-                vertical: 100,
+              margin: const EdgeInsets.only(
+                bottom: 100,
               ),
               child: NeumorphicButton(
                 size: 80,

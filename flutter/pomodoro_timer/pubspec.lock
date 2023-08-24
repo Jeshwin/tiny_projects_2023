@@ -78,14 +78,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_inset_box_shadow:
-    dependency: "direct main"
-    description:
-      name: flutter_inset_box_shadow
-      sha256: "0b1930ed5f4ad84b11b41dda907fbc5d4c12929a4c51455c626e5937b47ffb93"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.8"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -94,6 +86,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.2"
+  flutter_platform_widgets:
+    dependency: "direct main"
+    description:
+      name: flutter_platform_widgets
+      sha256: "107d5bc9a167b4e268cba44075ee399b6b2c63d44ede28f7e8c983d7fa4b59be"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.3.5"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -327,4 +327,4 @@ packages:
     version: "1.0.2"
 sdks:
   dart: ">=3.1.0-185.0.dev <4.0.0"
-  flutter: ">=3.3.0"
+  flutter: ">=3.7.0"
