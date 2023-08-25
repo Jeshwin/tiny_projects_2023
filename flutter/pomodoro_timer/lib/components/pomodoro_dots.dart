@@ -55,9 +55,37 @@ class PomodoroDots extends StatelessWidget {
       color: Theme.of(context).primaryColor,
     ));
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: childrenDots,
+    String currentText;
+
+    if (currentDot == numCycles * 2 + 1) {
+      currentText = "Long Break";
+    } else {
+      if (currentDot % 2 == 0) {
+        currentText = "Work";
+      } else {
+        currentText = "Short Break";
+      }
+    }
+
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: childrenDots,
+        ),
+        Container(
+          margin: const EdgeInsets.only(
+            top: 20,
+          ),
+          child: Text(
+            currentText,
+            style: TextStyle(
+              fontSize: 30,
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

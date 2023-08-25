@@ -80,6 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final prefs = await SharedPreferences.getInstance();
 
     setState(() {
+      _pauseTimer();
       _automaticCycles = prefs.getBool('automaticCycles') ?? false;
       _numCycles = prefs.getInt('numCycles') ?? 2;
 
