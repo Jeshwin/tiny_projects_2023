@@ -57,6 +57,17 @@ dev_dependencies:
     # rules and activating additional ones.
     flutter_lints: ^2.0.0
 
+    # Easily create app icons for multiple platforms
+    flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+    image_path: "assets/icon/Pomodoro App Icon.png"
+    android: true
+    adaptive_icon_background: "#ffffff"
+    adaptive_icon_foreground: "assets/icon/logo_foreground.png"
+    ios: true
+    remove_alpha_ios: true
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -86,7 +97,7 @@ flutter:
     fonts:
         - family: NunitoSans
           fonts:
-              - asset: fonts/NunitoSans-VariableFont_YTLC,opsz,wdth,wght.ttf
+              - asset: assets/fonts/NunitoSans-VariableFont_YTLC,opsz,wdth,wght.ttf
     #
     # For details regarding fonts from package dependencies,
     # see https://flutter.dev/custom-fonts/#from-packages
