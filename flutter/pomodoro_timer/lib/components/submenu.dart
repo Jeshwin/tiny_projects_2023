@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pomodoro_timer/utils/helper_functions.dart';
 
 class Submenu extends StatefulWidget {
   const Submenu({super.key, required this.title, required this.children});
@@ -45,26 +46,33 @@ class _SubmenuState extends State<Submenu> {
               color: Theme.of(context).primaryColor,
             ),
           ),
-          Container(
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 700),
             decoration: BoxDecoration(
               color: Theme.of(context).scaffoldBackgroundColor,
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
-                const BoxShadow(
-                  offset: Offset(5, 10),
-                  color: Colors.black38,
+                BoxShadow(
+                  offset: const Offset(5, 10),
+                  color: offsetColor(
+                      Theme.of(context).scaffoldBackgroundColor, -21),
                   blurRadius: 20,
-                  spreadRadius: 0.5,
                 ),
                 BoxShadow(
                   offset: const Offset(-5, -10),
-                  color: (Theme.of(context).brightness == Brightness.light)
-                      ? Colors.white38
-                      : Colors.white12,
+                  color: offsetColor(
+                      Theme.of(context).scaffoldBackgroundColor, 21),
                   blurRadius: 30,
-                  spreadRadius: 0.1,
                 ),
               ],
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  offsetColor(Theme.of(context).scaffoldBackgroundColor, 7),
+                  offsetColor(Theme.of(context).scaffoldBackgroundColor, -7),
+                ],
+              ),
             ),
             margin: const EdgeInsets.symmetric(vertical: 10),
             padding: const EdgeInsets.symmetric(

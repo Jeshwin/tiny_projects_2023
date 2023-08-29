@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pomodoro_timer/utils/helper_functions.dart';
 
 class NeumorphicButton extends StatelessWidget {
   const NeumorphicButton({
@@ -26,19 +27,23 @@ class NeumorphicButton extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             offset: Offset(size / 40, size / 16),
-            color: Colors.black38,
+            color: offsetColor(color, -21),
             blurRadius: size / 10,
-            spreadRadius: 0.5,
           ),
           BoxShadow(
             offset: Offset(size / -40, size / -20),
-            color: (Theme.of(context).brightness == Brightness.light)
-                ? Colors.white38
-                : Colors.white12,
+            color: offsetColor(color, 21),
             blurRadius: size / 6.67,
-            spreadRadius: 0.1,
           ),
         ],
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            offsetColor(color, -7),
+            offsetColor(color, 7),
+          ],
+        ),
       ),
       child: IconButton(
         onPressed: onPressed,

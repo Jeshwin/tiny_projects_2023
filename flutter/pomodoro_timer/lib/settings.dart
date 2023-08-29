@@ -23,8 +23,9 @@ class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: AnimatedContainer(
         color: Theme.of(context).scaffoldBackgroundColor,
+        duration: const Duration(milliseconds: 700),
         alignment: Alignment.center,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -47,10 +48,11 @@ class _SettingsState extends State<Settings> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       "Number of Cycles",
                       style: TextStyle(
                         fontSize: 18,
+                        color: Theme.of(context).primaryColor,
                       ),
                     ),
                     Consumer<SettingsModel>(
@@ -72,8 +74,9 @@ class _SettingsState extends State<Settings> {
                             backgroundColor: MaterialStatePropertyAll(
                                 Theme.of(context).scaffoldBackgroundColor),
                           ),
-                          textStyle: const TextStyle(
+                          textStyle: TextStyle(
                             fontSize: 18,
+                            color: Theme.of(context).primaryColor,
                           ),
                           onSelected: (int? option) {
                             settings.setNumCycles(option ?? 2);
@@ -88,10 +91,11 @@ class _SettingsState extends State<Settings> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       "Start Cycles Automatically",
                       style: TextStyle(
                         fontSize: 18,
+                        color: Theme.of(context).primaryColor,
                       ),
                     ),
                     Consumer<SettingsModel>(
@@ -116,10 +120,11 @@ class _SettingsState extends State<Settings> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       "Work Time",
                       style: TextStyle(
                         fontSize: 18,
+                        color: Theme.of(context).primaryColor,
                       ),
                     ),
                     Consumer<SettingsModel>(
@@ -151,8 +156,9 @@ class _SettingsState extends State<Settings> {
                               Theme.of(context).scaffoldBackgroundColor,
                             ),
                           ),
-                          textStyle: const TextStyle(
+                          textStyle: TextStyle(
                             fontSize: 18,
+                            color: Theme.of(context).primaryColor,
                           ),
                           onSelected: (int? option) {
                             settings.setWorkTime(option ?? defaultWorkTime);
@@ -167,10 +173,11 @@ class _SettingsState extends State<Settings> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       "Short Break",
                       style: TextStyle(
                         fontSize: 18,
+                        color: Theme.of(context).primaryColor,
                       ),
                     ),
                     Consumer<SettingsModel>(
@@ -196,8 +203,9 @@ class _SettingsState extends State<Settings> {
                               Theme.of(context).scaffoldBackgroundColor,
                             ),
                           ),
-                          textStyle: const TextStyle(
+                          textStyle: TextStyle(
                             fontSize: 18,
+                            color: Theme.of(context).primaryColor,
                           ),
                           onSelected: (int? option) {
                             settings.setShortBreakTIme(
@@ -213,10 +221,11 @@ class _SettingsState extends State<Settings> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       "Long Break",
                       style: TextStyle(
                         fontSize: 18,
+                        color: Theme.of(context).primaryColor,
                       ),
                     ),
                     Consumer<SettingsModel>(
@@ -243,8 +252,9 @@ class _SettingsState extends State<Settings> {
                               Theme.of(context).scaffoldBackgroundColor,
                             ),
                           ),
-                          textStyle: const TextStyle(
+                          textStyle: TextStyle(
                             fontSize: 18,
+                            color: Theme.of(context).primaryColor,
                           ),
                           onSelected: (int? option) {
                             settings.setLongBreakTime(

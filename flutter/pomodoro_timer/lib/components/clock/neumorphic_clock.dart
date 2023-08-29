@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pomodoro_timer/components/clock/clock_painter.dart';
+import 'package:pomodoro_timer/utils/helper_functions.dart';
 import 'package:pomodoro_timer/utils/settings_model.dart';
 import 'package:provider/provider.dart';
 
@@ -31,21 +32,25 @@ class _NeumorphicClockState extends State<NeumorphicClock> {
         color: widget.color,
         shape: BoxShape.circle,
         boxShadow: [
-          const BoxShadow(
-            offset: Offset(6.25, 16),
-            color: Colors.black38,
+          BoxShadow(
+            offset: const Offset(6.25, 16),
+            color: offsetColor(widget.color, -21),
             blurRadius: 25,
-            spreadRadius: 0.5,
           ),
           BoxShadow(
             offset: const Offset(-6.25, -12.5),
-            color: (Theme.of(context).brightness == Brightness.light)
-                ? Colors.white38
-                : Colors.white12,
+            color: offsetColor(widget.color, 21),
             blurRadius: 37.5,
-            spreadRadius: 0.1,
           ),
         ],
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            offsetColor(widget.color, -7),
+            offsetColor(widget.color, 7),
+          ],
+        ),
       ),
       child: Consumer<SettingsModel>(
         builder: (context, settings, child) {
