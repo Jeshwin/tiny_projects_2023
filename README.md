@@ -13,7 +13,7 @@ Welcome to my Summer of Tiny Projects 2023! Here, you'll find a collection of di
 ## 🚀 Projects
 
 -   [x] **Portfolio Website (Typescript+React)**
-        A simple yet stylish personal protfolio website created using NextJS, React, Typescript, TailwindCSS, Prisma, PostgreSQL, and AWS S3. Showcases my full-stack design skills.
+        A simple yet stylish personal portfolio website created using NextJS, React, Typescript, TailwindCSS, Prisma, PostgreSQL, and AWS S3. Showcases my full-stack design skills.
 
 -   [x] **Terminal Sudoku (Rust)**
         A simple sudoku game made for the command line. Includes all the functionality of a modern sudoku app, but rendered fully in text!
