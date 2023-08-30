@@ -33,7 +33,6 @@ class PomodoroDots extends StatelessWidget {
       }
       childrenDots.add(Icon(
         iconToAdd,
-        color: Theme.of(context).primaryColor,
       ));
       completed--;
     }
@@ -52,7 +51,6 @@ class PomodoroDots extends StatelessWidget {
     }
     childrenDots.add(Icon(
       iconToAdd,
-      color: Theme.of(context).primaryColor,
     ));
 
     String currentText;
@@ -79,9 +77,8 @@ class PomodoroDots extends StatelessWidget {
           ),
           child: Text(
             currentText,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 30,
-              color: Theme.of(context).primaryColor,
             ),
           ),
         ),

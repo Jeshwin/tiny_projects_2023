@@ -50,7 +50,6 @@ class NeumorphicButton extends StatelessWidget {
         icon: Icon(
           icon,
           size: size / 1.6,
-          color: Theme.of(context).primaryColor,
         ),
       ),
     );

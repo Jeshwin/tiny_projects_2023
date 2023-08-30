@@ -48,11 +48,10 @@ class _SettingsState extends State<Settings> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                    const Text(
                       "Number of Cycles",
                       style: TextStyle(
                         fontSize: 18,
-                        color: Theme.of(context).primaryColor,
                       ),
                     ),
                     Consumer<SettingsModel>(
@@ -74,9 +73,8 @@ class _SettingsState extends State<Settings> {
                             backgroundColor: MaterialStatePropertyAll(
                                 Theme.of(context).scaffoldBackgroundColor),
                           ),
-                          textStyle: TextStyle(
+                          textStyle: const TextStyle(
                             fontSize: 18,
-                            color: Theme.of(context).primaryColor,
                           ),
                           onSelected: (int? option) {
                             settings.setNumCycles(option ?? 2);
@@ -91,11 +89,10 @@ class _SettingsState extends State<Settings> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                    const Text(
                       "Start Cycles Automatically",
                       style: TextStyle(
                         fontSize: 18,
-                        color: Theme.of(context).primaryColor,
                       ),
                     ),
                     Consumer<SettingsModel>(
@@ -120,25 +117,14 @@ class _SettingsState extends State<Settings> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                    const Text(
                       "Work Time",
                       style: TextStyle(
                         fontSize: 18,
-                        color: Theme.of(context).primaryColor,
                       ),
                     ),
                     Consumer<SettingsModel>(
                       builder: (context, settings, child) {
-                        List<int> workTimeOptions = [
-                          900000, // 15 minutes
-                          1200000, // 20 minutes
-                          1500000, // 25 minutes
-                          1800000, // 30 minutes
-                          2400000, // 40 minutes
-                          2700000, // 45 minutes
-                          3000000, // 50 minutes
-                          3600000, // 60 minutes
-                        ];
                         List<DropdownMenuEntry<int>> workTimeEntries = [];
                         for (int option in workTimeOptions) {
                           workTimeEntries.add(DropdownMenuEntry<int>(
@@ -156,9 +142,8 @@ class _SettingsState extends State<Settings> {
                               Theme.of(context).scaffoldBackgroundColor,
                             ),
                           ),
-                          textStyle: TextStyle(
+                          textStyle: const TextStyle(
                             fontSize: 18,
-                            color: Theme.of(context).primaryColor,
                           ),
                           onSelected: (int? option) {
                             settings.setWorkTime(option ?? defaultWorkTime);
@@ -173,19 +158,14 @@ class _SettingsState extends State<Settings> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                    const Text(
                       "Short Break",
                       style: TextStyle(
                         fontSize: 18,
-                        color: Theme.of(context).primaryColor,
                       ),
                     ),
                     Consumer<SettingsModel>(
                       builder: (context, settings, child) {
-                        List<int> shortBreakTimeOptions = [
-                          300000, // 5 minutes
-                          600000, // 10 minutes
-                        ];
                         List<DropdownMenuEntry<int>> shortBreakTimeEntries = [];
                         for (int option in shortBreakTimeOptions) {
                           shortBreakTimeEntries.add(DropdownMenuEntry<int>(
@@ -203,9 +183,8 @@ class _SettingsState extends State<Settings> {
                               Theme.of(context).scaffoldBackgroundColor,
                             ),
                           ),
-                          textStyle: TextStyle(
+                          textStyle: const TextStyle(
                             fontSize: 18,
-                            color: Theme.of(context).primaryColor,
                           ),
                           onSelected: (int? option) {
                             settings.setShortBreakTIme(
@@ -221,20 +200,14 @@ class _SettingsState extends State<Settings> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                    const Text(
                       "Long Break",
                       style: TextStyle(
                         fontSize: 18,
-                        color: Theme.of(context).primaryColor,
                       ),
                     ),
                     Consumer<SettingsModel>(
                       builder: (context, settings, child) {
-                        List<int> longBreakTimeOptions = [
-                          900000, // 15 minutes
-                          1200000, // 20 minutes
-                          1800000, // 30 minutes
-                        ];
                         List<DropdownMenuEntry<int>> longBreakTimeEntries = [];
                         for (int option in longBreakTimeOptions) {
                           longBreakTimeEntries.add(DropdownMenuEntry<int>(
@@ -252,9 +225,8 @@ class _SettingsState extends State<Settings> {
                               Theme.of(context).scaffoldBackgroundColor,
                             ),
                           ),
-                          textStyle: TextStyle(
+                          textStyle: const TextStyle(
                             fontSize: 18,
-                            color: Theme.of(context).primaryColor,
                           ),
                           onSelected: (int? option) {
                             settings.setLongBreakTime(

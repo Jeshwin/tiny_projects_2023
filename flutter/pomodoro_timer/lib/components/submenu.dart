@@ -43,7 +43,6 @@ class _SubmenuState extends State<Submenu> {
             widget.title,
             style: TextStyle(
               fontSize: 30,
-              color: Theme.of(context).primaryColor,
             ),
           ),
           AnimatedContainer(

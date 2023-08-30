@@ -1,4 +1,4 @@
-package com.example.pomodoro_timer
+package com.jeshwinprince.pomodoro_timer
 
 import io.flutter.embedding.android.FlutterActivity
 

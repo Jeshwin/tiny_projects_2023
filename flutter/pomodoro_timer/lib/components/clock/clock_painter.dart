@@ -24,7 +24,7 @@ class ClockPainter extends CustomPainter {
 
     // Draw second hand
     final secondHandPaint = Paint()
-      ..color = (brightness == Brightness.light) ? Colors.red : Colors.pink
+      ..color = const Color(0xffff0000)
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
       ..strokeWidth = 2;

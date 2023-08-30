@@ -35,13 +35,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         brightness: Brightness.light,
         scaffoldBackgroundColor: const Color(0xffeff1f5),
-        primaryColor: const Color(0xff4c4f69),
         fontFamily: 'NunitoSans',
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         scaffoldBackgroundColor: const Color(0xff24273a),
-        primaryColor: const Color(0xffcad3f5),
         fontFamily: 'NunitoSans',
       ),
       home: const MyHomePage(),
@@ -225,9 +223,8 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               child: Text(
                 _secondsToString(),
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 100,
-                  color: Theme.of(context).primaryColor,
                 ),
               ),
             ),

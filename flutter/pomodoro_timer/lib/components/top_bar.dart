@@ -37,9 +37,8 @@ class _TopBarState extends State<TopBar> {
           widget.left,
           Text(
             widget.title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 25,
-              color: Theme.of(context).primaryColor,
             ),
           ),
           widget.right
