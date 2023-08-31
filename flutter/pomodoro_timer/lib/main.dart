@@ -5,6 +5,7 @@ import 'package:pomodoro_timer/components/clock/neumorphic_clock.dart';
 import 'package:pomodoro_timer/components/pomodoro_dots.dart';
 import 'package:pomodoro_timer/components/top_bar.dart';
 import 'package:pomodoro_timer/settings.dart';
+import 'package:pomodoro_timer/utils/notification_service.dart';
 import 'package:pomodoro_timer/utils/settings_model.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -67,9 +68,12 @@ class _MyHomePageState extends State<MyHomePage> {
   int _shortBreakTime = defaultShortBreakTime;
   int _longBreakTime = defaultLongBreakTime;
 
+  int _notificationId = 0;
+
   @override
   void initState() {
     super.initState();
+    NotificationService().initNotification();
     _loadTimers();
   }
 
@@ -79,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     setState(() {
       _pauseTimer();
-      _automaticCycles = prefs.getBool('automaticCycles') ?? false;
+      _automaticCycles = prefs.getBool('isAutomatic') ?? false;
       _numCycles = prefs.getInt('numCycles') ?? 2;
 
       _workTime = prefs.getInt('workTime') ?? defaultWorkTime;
@@ -105,12 +109,29 @@ class _MyHomePageState extends State<MyHomePage> {
           _timer?.cancel();
 
           if (_currentDot == _numCycles * 2 + 1) {
+            NotificationService().showNotification(
+              id: _notificationId,
+              title: "Take a break",
+              body: "Nice work! Let's take a long break!",
+            );
             _numMillis = _longBreakTime;
           } else if (_currentDot % 2 == 0) {
+            NotificationService().showNotification(
+              id: _notificationId,
+              title: "Time to work",
+              body: "Let's get back to work!",
+            );
             _numMillis = _workTime;
           } else {
+            NotificationService().showNotification(
+              id: _notificationId,
+              title: "Take a short break",
+              body: "Rest for a bit, then come back later!",
+            );
             _numMillis = _shortBreakTime;
           }
+
+          _notificationId = (_notificationId + 1) % (_numCycles * 2 + 2);
 
           if (_automaticCycles) {
             _startTimer();

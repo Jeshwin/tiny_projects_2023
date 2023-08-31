@@ -101,10 +101,6 @@ class _SettingsState extends State<Settings> {
                         onChanged: (bool value) {
                           settings.setIsAutomatic(value);
                         },
-                        activeColor:
-                            (Theme.of(context).brightness == Brightness.light)
-                                ? const Color(0xff74c7ec)
-                                : const Color(0xff04a5e5),
                       ),
                     ),
                   ],
